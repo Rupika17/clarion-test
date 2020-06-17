@@ -1,4 +1,4 @@
-import React ,{Component} from 'react';
+import React ,{Component, useEffect} from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import AppBar from 'material-ui/AppBar';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -21,11 +21,21 @@ import Button from '@material-ui/core/Button';
 
  function FormDialog() {
   const [open, setOpen] = React.useState(false);
+  const [rows1, setRows] = React.useState(rows);
+  const [name, changeName] = React.useState('');
+  useEffect(()=>{
+    setRows(rows);
+  })
 
   const handleClickOpen = () => {
     setOpen(true);
   };
+  const handleSave=()=>{
+    rows.push(createData(6,'prd',23,3));
+    setRows(rows);
+    console.log(rows)   
 
+  }
   const handleClose = () => {
     setOpen(false);
   };
@@ -36,18 +46,45 @@ import Button from '@material-ui/core/Button';
         Add Products
       </Button>
       <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-        <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
+        <DialogTitle id="form-dialog-title">Add Product</DialogTitle>
         <DialogContent>
-          <DialogContentText>
-            To subscribe to this website, please enter your email address here. We will send updates
-            occasionally.
-          </DialogContentText>
+         
+          <TextField
+            autoFocus
+            margin="dense"
+            id="id"
+            value = {name}
+            onChange={(e)=> changeName(e.target.value)}
+            fullWidth
+            hintText="Enter your Product ID"
+            floatingLabelText="Product ID"
+          />
           <TextField
             autoFocus
             margin="dense"
             id="name"
-            label="Email Address"
-            type="email"
+            hintText="Enter your Product Name"
+            floatingLabelText="Product Name"
+           
+            fullWidth
+          />
+          <TextField
+            autoFocus
+            margin="dense"
+            id="rate"
+            hintText="Enter your Product Rate"
+            floatingLabelText="Rate"
+            type="number" 
+            inputProps={{ min: "0", max: "10", step: "1" }}
+            fullWidth
+          />
+          <TextField
+            autoFocus
+            margin="dense"
+            id="quality"
+            hintText="Enter your Product Quality"
+            floatingLabelText="Quality"
+            type="number" inputProps={{ min: "0", max: "3", step: "1" }}
             fullWidth
           />
         </DialogContent>
@@ -55,8 +92,8 @@ import Button from '@material-ui/core/Button';
           <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleClose} color="primary">
-            Subscribe
+          <Button onClick={handleSave} color="primary">
+            Save
           </Button>
         </DialogActions>
       </Dialog>
@@ -81,16 +118,17 @@ const StyledTableCell = withStyles((theme) => ({
     },
   }))(TableRow);
   
-  function createData(name, calories, fat, carbs, protein) {
-    return { name, calories, fat, carbs, protein };
+  function createData(id, name, rate, quality) {
+    
+    return { id, name, rate, quality };
   }
   
   const rows = [
-    createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-    createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-    createData('Eclair', 262, 16.0, 24, 6.0),
-    createData('Cupcake', 305, 3.7, 67, 4.3),
-    createData('Gingerbread', 356, 16.0, 49, 3.9),
+    createData(1,'Product 1', 1590, 6.0),
+    createData(2,'Product 2', 2370, 9.0),
+    createData(3,'Product 3', 2621, 16.0),
+    createData(4,'Product 4', 3052, 3.7),
+    createData(5,'Product 5', 3560, 16.0),
   ];
   
   const useStyles = makeStyles({
@@ -107,23 +145,22 @@ const StyledTableCell = withStyles((theme) => ({
         <Table className={classes.table} aria-label="customized table">
           <TableHead>
             <TableRow>
-              <StyledTableCell>Dessert (100g serving)</StyledTableCell>
-              <StyledTableCell align="right">Calories</StyledTableCell>
-              <StyledTableCell align="right">Fat&nbsp;(g)</StyledTableCell>
-              <StyledTableCell align="right">Carbs&nbsp;(g)</StyledTableCell>
-              <StyledTableCell align="right">Protein&nbsp;(g)</StyledTableCell>
+              <StyledTableCell>Product ID</StyledTableCell>
+              <StyledTableCell align="center">Name</StyledTableCell>
+              <StyledTableCell align="right">Rate</StyledTableCell>
+              <StyledTableCell align="right">Quality</StyledTableCell>
+              
             </TableRow>
           </TableHead>
           <TableBody>
             {rows.map((row) => (
-              <StyledTableRow key={row.name}>
+              <StyledTableRow key={row.id}>
                 <StyledTableCell component="th" scope="row">
-                  {row.name}
+                  {row.id}
                 </StyledTableCell>
-                <StyledTableCell align="right">{row.calories}</StyledTableCell>
-                <StyledTableCell align="right">{row.fat}</StyledTableCell>
-                <StyledTableCell align="right">{row.carbs}</StyledTableCell>
-                <StyledTableCell align="right">{row.protein}</StyledTableCell>
+                <StyledTableCell align="center">{row.name}</StyledTableCell>
+                <StyledTableCell align="right">{row.rate}</StyledTableCell>
+                <StyledTableCell align="right">{row.quality}</StyledTableCell>
               </StyledTableRow>
             ))}
           </TableBody>
@@ -148,7 +185,7 @@ class Home extends Component {
                 title="Welcome Clarion"
                 showMenuIconButton={false}
                />
-               <div style={{marginTop:"30px", textAlign:"right"}}>
+               <div style={{marginTop:"30px", textAlign:"right", marginRight:"5px"}}>
                <FormDialog />
                </div>
                <div style={{marginTop:"30px"}}>
